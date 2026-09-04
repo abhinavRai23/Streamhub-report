@@ -26,6 +26,18 @@ During this optimization exercise, I used Claude (via Claude Code) primarily for
 - Follows React best practices for separating concerns
 - Still eliminates the duplicate processing work
 
+## Extensibility Testing
+
+After completing the core optimizations, I tested the extensibility of the solution by:
+1. Adding a new `LANGUAGE` dimension to the system
+2. Updated `DIMENSIONS` enum in `src/constants/report.ts`
+3. Added `LANGUAGE` configuration to `DIMENSION_REGISTRY` in `src/config/reportSchema.ts`
+4. Added preset values for language dimension (`['en', 'es', 'fr', 'de', 'ja']`)
+5. Verified all tests still pass (17/17)
+6. Confirmed the ChartView and TableView components automatically adapt to the new dimension without any code changes
+
+This demonstrated that the solution successfully achieves the goal of extensibility - new dimensions (and metrics) can be added through configuration updates only, without requiring changes to the core chart/table logic or the centralized data processing hook.
+
 ## Time Allocation
 
 **Total rough time spent**: 3.5 hours

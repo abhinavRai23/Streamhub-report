@@ -4,7 +4,7 @@ import { Button } from '../UI/Button';
 import { Select, type SelectOption } from '../UI/Select';
 import { DateRangePicker } from './DateRangePicker';
 import { Trash2 } from 'lucide-react';
-import { DIMENSION_REGISTRY } from '../../config/reportSchema';
+import { DIMENSION_REGISTRY, AVAILABLE_DIMENSIONS } from '../../config/reportSchema';
 import { DIMENSIONS, OPERATORS, DATE_CONFIG } from '../../constants/report';
 import { UI_STYLES } from '../../constants/styles';
 
@@ -14,13 +14,10 @@ interface FilterRowProps {
   onUpdate: (id: string, updates: Partial<Omit<Filter, 'id'>>) => void;
 }
 
-const FIELD_OPTIONS: SelectOption<Dimension>[] = [
-  { label: 'Date', value: DIMENSIONS.DATE },
-  { label: 'Country', value: DIMENSIONS.COUNTRY },
-  { label: 'Device', value: DIMENSIONS.DEVICE },
-  { label: 'Channel', value: DIMENSIONS.CHANNEL },
-  { label: 'Campaign', value: DIMENSIONS.CAMPAIGN },
-];
+const FIELD_OPTIONS: SelectOption<Dimension>[] = AVAILABLE_DIMENSIONS.map((dim) => ({
+  label: dim.charAt(0).toUpperCase() + dim.slice(1),
+  value: dim,
+}));
 
 const DATE_OPERATOR_OPTIONS: SelectOption<FilterOperator>[] = [
   { label: 'Between (Range)', value: OPERATORS.BETWEEN },
