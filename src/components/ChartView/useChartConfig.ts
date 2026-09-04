@@ -18,17 +18,53 @@ export const useChartConfig = ({ dimension, metrics, data }: UseChartConfigParam
     const isDateDimension = dimension === DIMENSIONS.DATE;
     const chartType: 'line' | 'column' = isDateDimension ? 'line' : 'column';
 
-    const hasBounceRate = metrics.includes(METRICS.BOUNCE_RATE);
-    const hasVolumetricMetrics = metrics.some((m) => m !== METRICS.BOUNCE_RATE);
-    const isDualAxis = hasBounceRate && hasVolumetricMetrics;
+    // Group metrics by their axisType from the registry
+    const metricsByAxis: Record<'primary' | 'secondary', Metric[]> = {
+      primary: [],
+      secondary: []
+    };
 
+    metrics.forEach(metricId => {
+      const axisType = METRIC_REGISTRY[metricId].axisType;
+      metricsByAxis[axisType].push(metricId);
+    });
+
+    // Determine if we need dual axis (metrics on both primary and secondary)
+    const isDualAxis = metricsByAxis.primary.length > 0 && metricsByAxis.secondary.length > 0;
+
+    // Build yAxes configuration dynamically
     const yAxes: Highcharts.YAxisOptions[] = [];
 
-    if (isDualAxis) {
-      const hasRevenue = metrics.includes(METRICS.REVENUE);
+    // Helper function to format a list of items with proper conjunctions
+    const formatMetricList = (labels: string[]): string => {
+      if (labels.length === 0) return '';
+      if (labels.length === 1) return labels[0];
+      if (labels.length === 2) return `${labels[0]} and ${labels[1]}`;
+      return `${labels.slice(0, -1).join(', ')}, and ${labels[labels.length - 1]}`;
+    };
+
+    // Build metric lists for labeling
+    const primaryMetricLabels = metricsByAxis.primary.map(id => METRIC_REGISTRY[id].label);
+
+    // Primary axis (always present if we have primary metrics)
+    if (metricsByAxis.primary.length > 0) {
+      // Determine label based on metrics present
+      const hasRevenue = metricsByAxis.primary.includes(METRICS.REVENUE);
+      const volumeLabels = primaryMetricLabels.filter(label => label !== 'Revenue');
+      const hasVolume = volumeLabels.length > 0;
+
+      let primaryTitle = 'Volume';
+      if (hasRevenue && hasVolume) {
+        primaryTitle = `Revenue ($) and ${formatMetricList(volumeLabels)}`;
+      } else if (hasRevenue) {
+        primaryTitle = 'Revenue ($)';
+      } else if (hasVolume) {
+        primaryTitle = formatMetricList(volumeLabels);
+      }
+
       yAxes.push({
         title: {
-          text: hasRevenue ? 'Revenue ($) / Volume' : 'Volume (Count)',
+          text: primaryTitle,
           style: { color: CHART_THEME.text.secondary, fontSize: '11px', fontWeight: '600' },
         },
         labels: {
@@ -39,10 +75,18 @@ export const useChartConfig = ({ dimension, metrics, data }: UseChartConfigParam
         },
         gridLineColor: CHART_THEME.grid.line,
       });
+    }
+
+    // Secondary axis (only if we have secondary metrics)
+    if (metricsByAxis.secondary.length > 0) {
+      // Build dynamic title from secondary metrics
+      const secondaryMetricLabels = metricsByAxis.secondary.map(
+        metricId => METRIC_REGISTRY[metricId].label
+      );
 
       yAxes.push({
         title: {
-          text: 'Bounce Rate (%)',
+          text: `${formatMetricList(secondaryMetricLabels)} (%)`,
           style: { color: CHART_THEME.text.accent, fontSize: '11px', fontWeight: '600' },
         },
         opposite: true,
@@ -56,42 +100,12 @@ export const useChartConfig = ({ dimension, metrics, data }: UseChartConfigParam
         },
         gridLineWidth: 0,
       });
-    } else if (hasBounceRate && !hasVolumetricMetrics) {
-      yAxes.push({
-        title: {
-          text: 'Bounce Rate (%)',
-          style: { color: CHART_THEME.text.secondary, fontSize: '11px', fontWeight: '600' },
-        },
-        min: 0,
-        max: 1,
-        labels: {
-          style: { color: CHART_THEME.text.muted, fontSize: '10px' },
-          formatter: function () {
-            return formatPercent(Number(this.value), 0);
-          },
-        },
-        gridLineColor: CHART_THEME.grid.line,
-      });
-    } else {
-      const hasRevenue = metrics.includes(METRICS.REVENUE);
-      yAxes.push({
-        title: {
-          text: hasRevenue ? 'Revenue ($) / Count' : 'Count',
-          style: { color: CHART_THEME.text.secondary, fontSize: '11px', fontWeight: '600' },
-        },
-        labels: {
-          style: { color: CHART_THEME.text.muted, fontSize: '10px' },
-          formatter: function () {
-            return formatAxisValue(Number(this.value), hasRevenue);
-          },
-        },
-        gridLineColor: CHART_THEME.grid.line,
-      });
     }
 
+    // Build series configuration
     const series: Highcharts.SeriesOptionsType[] = metrics.map((metricId) => {
       const def = METRIC_REGISTRY[metricId];
-      const targetYAxis = isDualAxis && metricId === METRICS.BOUNCE_RATE ? 1 : 0;
+      const targetYAxis = def.axisType === 'secondary' && isDualAxis ? 1 : 0;
 
       return {
         type: chartType,
@@ -103,7 +117,7 @@ export const useChartConfig = ({ dimension, metrics, data }: UseChartConfigParam
           pointFormatter: function () {
             const formatted = def.format(Number(this.y));
             return `
-              <span style="color:${this.color}">●</span> 
+              <span style="color:${this.color}">●</span>
               ${this.series.name}: <b>${formatted}</b><br/>
             `;
           },
