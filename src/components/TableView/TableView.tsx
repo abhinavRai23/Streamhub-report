@@ -75,3 +75,5 @@ export const TableView = () => {
     </div>
   );
 };
+
+export default TableView;

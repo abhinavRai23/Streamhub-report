@@ -91,7 +91,7 @@ npm run lint     # Run oxlint across the codebase
    │ 1. POST /api/v1/analytics/query
    │    { dimension: "device", metrics: ["sessions", "revenue", "bounceRate"], filters: [...] }
    ▼
-[API Gateway & Semantic Layer] (Node.js / Go / Cube.js)
+[API Gateway & Semantic Layer] (Node.js / Go)
    │ 
    │ 2. Compiles semantic metrics into Push-down SQL
    │    SELECT 
@@ -103,7 +103,7 @@ npm run lint     # Run oxlint across the codebase
    │    WHERE country = 'US' AND event_date BETWEEN '2026-06-01' AND '2026-06-05'
    │    GROUP BY device
    ▼
-[Columnar OLAP Engine] (ClickHouse / DuckDB / Snowflake)
+[Columnar OLAP Engine] (ClickHouse / Snowflake)
    │
    │ 3. Executes in-memory vectorized columnar aggregation across partitions
    ▼
@@ -176,4 +176,3 @@ src/
 
 ## Accompanying Documentation
 - [AI_NOTES.md](file:///Users/abhinavrai/Developer/SteamHub-ReportBuilder/AI_NOTES.md): Transparent record of AI tool usage, examples of rejected/corrected naive AI outputs (ratio metric averaging, React Query lifecycle), and time breakdown.
-- [SENIOR_ENGINEERING_LOG.md](file:///Users/abhinavrai/Developer/SteamHub-ReportBuilder/SENIOR_ENGINEERING_LOG.md): Detailed senior engineering decisions, architectural trade-offs, and live technical interview walkthrough guide.

@@ -89,3 +89,5 @@ export const ChartView = () => {
     </div>
   );
 };
+
+export default ChartView;

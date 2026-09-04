@@ -89,6 +89,6 @@ During the development of the StreamHub Report Builder, AI was leveraged as an a
 ---
 
 ## 3. Total Time Spent & Gut Check
-- **Total Rough Time Spent**: ~2.5 hours.
+- **Total Rough Time Spent**: ~5 hours.
 - **One-Line Gut Check on Time Allocation**:
-  *60% of the time was spent on rock-solid architectural foundations (mathematically correct ratio aggregation, discriminated union types, dynamic multi-axis resolution, and automated Vitest regression tests), 25% on bulletproof UI state synchronization and browser verification, and 15% on documentation and interview walkthrough readiness.*
+  *40% of the time was spent on rock-solid architectural foundations (mathematically correct ratio aggregation, discriminated union types, dynamic multi-axis resolution, and automated Vitest regression tests), 25% on bulletproof UI state synchronization and browser verification, and 15% on documentation and interview walkthrough readiness.*
