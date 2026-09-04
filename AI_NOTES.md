@@ -10,7 +10,6 @@ During the development of the StreamHub Report Builder, AI was leveraged as an a
 ---
 
 ## 2. Examples Where AI Output Was Corrected, Rejected, or Pushed Back On
-*(This is the critical evaluation section demonstrating senior technical direction over naive AI generations.)*
 
 ### Example A: The Ratio-Metric Trap (Naive Averaging Rejection)
 - **What AI Initially Generated**: When prompted to aggregate grouped rows, the AI's first proposed implementation computed `bounceRate` by calculating the bounce rate for each individual row (`row.bounces / row.totalVisits`) and then performing `sum(rowBounceRates) / count(rows)`.
