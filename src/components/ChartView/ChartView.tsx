@@ -1,7 +1,5 @@
-import { useMemo } from 'react';
 import { useReportStore } from '../../store/useReportStore';
-import { useReportData } from '../../hooks/useReportData';
-import { processData } from '../../utils/dataEngine';
+import { useProcessedReportData } from '../../hooks/useProcessedReportData';
 import { ChartEmptyState } from './ChartEmptyState';
 import { ChartSkeleton } from './ChartSkeleton';
 import { ChartErrorState } from './ChartErrorState';
@@ -11,20 +9,15 @@ import { useChartConfig } from './useChartConfig';
 import { UI_STYLES } from '../../constants/styles';
 
 export const ChartView = () => {
-  const { dimension, metrics, filters } = useReportStore();
+  const { dimension, metrics } = useReportStore();
 
   const {
-    data: rawData,
+    processedData,
     isLoading,
     isFetching,
     error,
     refetch,
-  } = useReportData();
-
-  const processedData = useMemo(() => {
-    if (!rawData) return [];
-    return processData(rawData, dimension, metrics, filters);
-  }, [rawData, dimension, metrics, filters]);
+  } = useProcessedReportData();
 
   const { options, isDateDimension, isDualAxis, rowCount } = useChartConfig({
     dimension,

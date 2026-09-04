@@ -1,22 +1,16 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useReportStore } from '../../store/useReportStore';
-import { useReportData } from '../../hooks/useReportData';
-import { processData } from '../../utils/dataEngine';
+import { useProcessedReportData } from '../../hooks/useProcessedReportData';
 import { sortAggregatedRows } from '../../utils/sorting';
 import { TableHeader } from './TableHeader';
 import { TableRow } from './TableRow';
 
 export const TableView = () => {
-  const { dimension, metrics, filters } = useReportStore();
+  const { dimension, metrics } = useReportStore();
   const [sortKey, setSortKey] = useState<string>(dimension);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-  const { data: rawData, isLoading } = useReportData();
-
-  const processedData = useMemo(() => {
-    if (!rawData) return [];
-    return processData(rawData, dimension, metrics, filters);
-  }, [rawData, dimension, metrics, filters]);
+  const { processedData, isLoading } = useProcessedReportData();
 
   const sortedRows = useMemo(() => {
     return sortAggregatedRows(processedData, sortKey, sortOrder);
@@ -31,7 +25,7 @@ export const TableView = () => {
     }
   }, [sortKey]);
 
-  if (isLoading || !rawData || processedData.length === 0 || metrics.length === 0) {
+  if (isLoading || processedData.length === 0 || metrics.length === 0) {
     return null;
   }
 
