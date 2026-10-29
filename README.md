@@ -1,5 +1,8 @@
 # SteamHub Report Builder
 
+[![Deploy to GitHub Pages](https://github.com/abhinavRai23/Streamhub-report/actions/workflows/deploy.yml/badge.svg)](https://github.com/abhinavRai23/Streamhub-report/actions/workflows/deploy.yml)
+&nbsp;**[🔗 Live Demo](https://abhinavrai23.github.io/Streamhub-report/)**
+
 A high-performance, single-page analytics Report Builder built with **React 18**, **TypeScript**, **Zustand**, **TanStack Query**, **Tailwind CSS**, and **Highcharts**.
 
 This project implements client-side aggregation, intelligent multi-axis charting, contextual filtering, URL-synced report state, and a sortable dataset table.
