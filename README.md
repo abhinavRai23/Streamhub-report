@@ -1,8 +1,10 @@
-# StreamHub Report Builder
+# SteamHub Report Builder
 
 A high-performance, single-page analytics Report Builder built with **React 18**, **TypeScript**, **Zustand**, **TanStack Query**, **Tailwind CSS**, and **Highcharts**.
 
 This project implements client-side aggregation, intelligent multi-axis charting, contextual filtering, URL-synced report state, and a sortable dataset table.
+
+![SteamHub Report Builder Screenshot](public/screenshot.png)
 
 ---
 
